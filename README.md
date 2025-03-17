@@ -1,43 +1,63 @@
-# CLI Chat Interface
+# Multi-Agent Life Automation System
 
-A minimal command-line interface for chatting with an LLM.
+A modular system for automating life tasks using multiple AI agents. The system consists of a main orchestrator agent that delegates tasks to specialized agents for specific functions like scheduling meetings, managing emails, and more.
 
-## Features
+## Project Goals
 
-- Clean and simple command-line interface
+- Create a flexible, modular system for life automation
+- Implement a main orchestrator agent that can understand and delegate tasks
+- Develop specialized agents for specific tasks (email, calendar, etc.)
+- Provide a unified interface for interacting with all agents
+- Ensure secure handling of sensitive data and API keys
+
+## Current Features
+
+### Core Infrastructure
+- Modular LLM provider system supporting multiple AI services
+  - OpenAI integration
+  - Anthropic integration
+  - Extensible architecture for adding more providers
+- Secure API key management using environment variables
+- Chat logging system for tracking conversations and task execution
+
+### Chat Interface
+- Clean command-line interface
+- Support for multiple LLM providers
 - Chat history management
+- Persistent logging of conversations
 - Clear screen functionality
-- Easy-to-use commands
-- Modular LLM provider system
-- OpenAI integration included
 
-## Requirements
+## Project Structure
 
-- Python 3.6 or higher
-- Required packages listed in `requirements.txt`
+```
+.
+├── llm_providers/           # LLM provider implementations
+│   ├── base.py             # Base provider interface
+│   ├── openai_provider.py  # OpenAI implementation
+│   ├── anthropic_provider.py # Anthropic implementation
+│   └── __init__.py
+├── utils/                  # Utility modules
+│   └── logger.py          # Chat logging functionality
+├── cli_chat.py            # Main chat interface
+├── requirements.txt       # Project dependencies
+├── .env.example          # Environment variables template
+└── .gitignore           # Git ignore rules
+```
 
-## Installation
+## Setup
 
 1. Clone this repository
-2. Install the required packages:
+2. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-## Configuration
-
-### OpenAI Integration
-
-To use the OpenAI provider, you need to set up your API key. You can do this in two ways:
-
-1. Set it as an environment variable:
-```bash
-export OPENAI_API_KEY='your-api-key-here'
+3. Configure environment variables:
+   - Copy `.env.example` to `.env`
+   - Add your API keys:
 ```
-
-2. Or create a `.env` file in the project root:
-```
-OPENAI_API_KEY=your-api-key-here
+OPENAI_API_KEY=your-openai-api-key-here
+ANTHROPIC_API_KEY=your-anthropic-api-key-here
 ```
 
 ## Usage
@@ -48,34 +68,42 @@ python cli_chat.py
 ```
 
 ### Commands
-
 - Type your message and press Enter to send
 - Type `exit` to quit the chat
 - Type `clear` to clear the chat history
 - Press Ctrl+C to exit at any time
 
-## Adding New LLM Providers
+## Todo
 
-The chat interface is designed to be modular and can work with any LLM provider that implements the `BaseLLMProvider` interface. To add a new provider:
+### Phase 1: Core Agent System
+- [ ] Implement main orchestrator agent
+- [ ] Create task parsing and delegation system
+- [ ] Develop agent communication protocol
+- [ ] Add basic task queue management
 
-1. Create a new class in the `llm_providers` directory that inherits from `BaseLLMProvider`
-2. Implement the required methods:
-   - `__init__`: Initialize the provider with necessary credentials
-   - `generate_response`: Generate responses from the LLM
-   - `get_model_name`: Return the name of the model being used
-3. Import and use your new provider in `cli_chat.py`
+### Phase 2: Specialized Agents
+- [ ] Email management agent
+- [ ] Calendar/scheduling agent
+- [ ] Task management agent
+- [ ] Note-taking agent
 
-Example of using a different provider:
-```python
-from llm_providers import YourCustomProvider
+### Phase 3: Integration & Enhancement
+- [ ] Add web interface
+- [ ] Implement agent memory system
+- [ ] Add task prioritization
+- [ ] Create agent performance monitoring
+- [ ] Add support for custom agent plugins
 
-chat = ChatInterface(
-    YourCustomProvider,
-    api_key="your-api-key",
-    model="your-model"
-)
-```
+### Phase 4: Security & Reliability
+- [ ] Implement robust error handling
+- [ ] Add rate limiting and API usage monitoring
+- [ ] Create backup and recovery systems
+- [ ] Add audit logging for sensitive operations
 
-## Note
+## Contributing
 
-This is a basic implementation that simulates AI responses. To integrate with an actual LLM, you'll need to modify the `chat` method in the `ChatInterface` class to connect to your preferred LLM service. 
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details. 

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 import os
 import sys
-from typing import List, Optional, Type
+from typing import List, Optional, Type, Dict
 from dotenv import load_dotenv
 from llm_providers import BaseLLMProvider, OpenAIProvider, AnthropicProvider
 from utils.logger import ChatLogger
+from nlu.pipeline import NLUPipeline
 
 # Load environment variables from .env file
 load_dotenv()
@@ -20,6 +21,7 @@ class ChatInterface:
         self.chat_history: List[dict] = []
         self.llm_provider = llm_provider_class(**provider_kwargs)
         self.logger = ChatLogger()
+        self.nlu_pipeline = NLUPipeline()
         self.clear_screen()
         
     def clear_screen(self):
@@ -33,6 +35,21 @@ class ChatInterface:
         else:
             print(f"\n🤖 Assistant: {content}")
             
+    def print_nlu_info(self, intent, entities, function_call):
+        """Print NLU processing information."""
+        print("\n🔍 NLU Analysis:")
+        print(f"Intent: {intent.type.value} (confidence: {intent.confidence:.2f})")
+        
+        if entities:
+            print("\nEntities found:")
+            for entity in entities:
+                print(f"- {entity.type}: {entity.value} (confidence: {entity.confidence:.2f})")
+                
+        if function_call:
+            print(f"\nMapped to function: {function_call.name}")
+            print(f"Parameters: {function_call.parameters}")
+            print(f"Confidence: {function_call.confidence:.2f}")
+            
     def get_user_input(self) -> Optional[str]:
         """Get input from the user."""
         try:
@@ -40,6 +57,20 @@ class ChatInterface:
         except KeyboardInterrupt:
             print("\n\nGoodbye!")
             sys.exit(0)
+            
+    def process_user_input(self, user_input: str) -> Dict:
+        """Process user input through NLU pipeline and return formatted data."""
+        # Process through NLU pipeline
+        intent = self.nlu_pipeline.extract_intent(user_input)
+        entities = self.nlu_pipeline.extract_entities(user_input)
+        intent.entities = entities
+        function_call = self.nlu_pipeline.map_to_function(intent)
+        
+        # Print NLU information
+        self.print_nlu_info(intent, entities, function_call)
+        
+        # Format NLU data for logging
+        return self.logger.format_nlu_data(intent, entities, function_call)
             
     def chat(self):
         """Main chat loop."""
@@ -55,6 +86,7 @@ class ChatInterface:
                 print("\nGoodbye!")
                 # Log the final chat history before exiting
                 self.logger.log_chat(self.chat_history, self.llm_provider.get_model_name())
+                
                 break
                 
             if user_input.lower() == 'clear':
@@ -66,6 +98,9 @@ class ChatInterface:
             if not user_input:
                 continue
                 
+            # Process input through NLU pipeline
+            nlu_data = self.process_user_input(user_input)
+                
             # Add user message to history
             self.chat_history.append({"role": "user", "content": user_input})
             
@@ -75,6 +110,13 @@ class ChatInterface:
             # Add assistant response to history
             self.chat_history.append({"role": "assistant", "content": response})
             self.print_message("assistant", response)
+            
+            # Log the chat with NLU data
+            self.logger.log_chat(
+                self.chat_history,
+                self.llm_provider.get_model_name(),
+                nlu_data
+            )
 
 if __name__ == "__main__":
     # Example usage with OpenAI provider

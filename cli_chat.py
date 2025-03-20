@@ -62,7 +62,7 @@ class ChatInterface:
         """Process user input through NLU pipeline and return formatted data."""
         # Process through NLU pipeline
         intent = self.nlu_pipeline.extract_intent(user_input)
-        entities = self.nlu_pipeline.extract_entities(user_input)
+        entities = self.nlu_pipeline.extract_entities(user_input, intent.type.value)
         intent.entities = entities
         function_call = self.nlu_pipeline.map_to_function(intent)
         

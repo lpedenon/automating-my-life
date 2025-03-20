@@ -1,0 +1,89 @@
+intents:
+  calendar:
+    patterns:
+      - keyword: meeting
+        weight: 1.0
+      - keyword: schedule
+        weight: 0.9
+      - keyword: appointment
+        weight: 0.9
+      - keyword: due
+        weight: 0.7
+      - keyword: reminder
+        weight: 0.8
+      - keyword: event
+        weight: 0.9
+      - keyword: task
+        weight: 0.6
+      - keyword: todo
+        weight: 0.6
+      - keyword: todo list
+        weight: 0.6
+      - keyword: conference
+        weight: 0.9
+      - keyword: calendar
+        weight: 0.8
+      - keyword: call
+        weight: 0.7
+
+  email:
+    patterns:
+      - keyword: email
+        weight: 1.0
+      - keyword: mail
+        weight: 0.9
+      - keyword: send
+        weight: 0.8
+      - keyword: message
+        weight: 0.7
+
+  task:
+    patterns:
+      - keyword: task
+        weight: 1.0
+      - keyword: todo
+        weight: 0.9
+      - keyword: reminder
+        weight: 0.8
+      - keyword: assign
+        weight: 0.9
+
+  note:
+    patterns:
+      - keyword: note
+        weight: 1.0
+      - keyword: write
+        weight: 0.8
+      - keyword: document
+        weight: 0.7
+      - keyword: record
+        weight: 0.8
+
+entity_types:
+  datetime:
+    keywords:
+      - when
+      - time
+      - date
+      - schedule
+
+  person:
+    keywords:
+      - who
+      - with
+      - to
+      - from
+
+  subject:
+    keywords:
+      - about
+      - regarding
+      - concerning
+      - topic
+
+  priority:
+    keywords:
+      - important
+      - urgent
+      - high priority
+      - low priority

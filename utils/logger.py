@@ -33,7 +33,7 @@ class ChatLogger:
             if isinstance(value, Enum):
                 data[key] = value.value
         return data
-        
+    
     def log_chat(self, messages: List[Dict[str, str]], model: str, nlu_data: Optional[Dict] = None):
         """Log chat messages and NLU data to a JSON file.
         

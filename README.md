@@ -1,207 +1,169 @@
 # Multi-Agent Life Automation System
 
-A modular system for automating life tasks using multiple AI agents. The system consists of a main orchestrator agent that delegates tasks to specialized agents for specific functions like scheduling meetings, managing emails, and more.
+A sophisticated system that uses multiple AI agents to automate various life tasks, from calendar management to email handling. The system is designed to be modular, extensible, and user-friendly.
 
-## Project Goals
+## Overview
 
-- Create a flexible, modular system for life automation
-- Implement a main orchestrator agent that can understand and delegate tasks
-- Develop specialized agents for specific tasks (email, calendar, etc.)
-- Provide a unified interface for interacting with all agents
-- Ensure secure handling of sensitive data and API keys
-- create a notification functionality where the application can send the user notifications
+This project implements a multi-agent system where different specialized AI agents work together to handle various life tasks. The system uses a Natural Language Understanding (NLU) pipeline to process user requests and route them to the appropriate agent.
 
-## Current Features
+### Key Components
 
-### Core Infrastructure
-- Modular LLM provider system supporting multiple AI services
-  - OpenAI integration
-  - Anthropic integration
-  - Extensible architecture for adding more providers
-- Secure API key management using environment variables
-- Chat logging system for tracking conversations and task execution
+1. **Natural Language Understanding (NLU) Pipeline**
+   - Configurable intent recognition with weighted pattern matching
+   - Context-aware entity extraction (dates, times, people, locations)
+   - Support for multiple intents and complex queries
+   - YAML-based configuration for easy customization
+   - Confidence scoring for both intents and entities
 
-### Natural Language Understanding (NLU) Pipeline
-- Intent recognition system for common tasks:
-  - Schedule meetings
-    - using keyword "meetings"
-  - Send emails
-    - using keyword "emails"
-  - Create tasks
-    - using keyword "tasks"
-  - Take notes
-    - using keyword "notes"
+2. **Specialized Agents**
+   - Calendar Agent: Manages appointments and events
+   - Email Agent: Handles email composition and management
+   - Task Agent: Creates and manages to-do items
+   - Note Agent: Manages note-taking and organization
 
-- Entity extraction for: NOT COMPLETE (Should be with AI)
-  - Datetime information
-  - People/contacts
-  - Subjects/topics
-  - Priority levels
-- Function mapping system to convert intents into actionable commands
-- Confidence scoring for intent and entity recognition
-- Interactive test interface for pipeline debugging and development
+3. **Unified Interface**
+   - Single entry point for all agent interactions
+   - Secure handling of sensitive data and API keys
+   - Consistent response format across all agents
 
-### Chat Interface
-- Clean command-line interface
-- Support for multiple LLM providers
-- Chat history management
-- Persistent logging of conversations
-- Clear screen functionality
+## Features
+
+### Current Features
+- Natural language processing of user requests
+- Calendar event creation and management
+- Email composition and sending
+- Task creation and tracking
+- Note-taking and organization
+- Secure API key management
+- Modular and extensible architecture
+
+### NLU Capabilities
+- **Intent Recognition**
+  - Weighted pattern matching for accurate intent detection
+  - Support for multiple intents in a single query
+  - Confidence scoring based on pattern relevance
+
+- **Entity Extraction**
+  - Datetime parsing (absolute and relative dates/times)
+  - Person name and pronoun recognition
+  - Location detection
+  - Duration and priority extraction
+  - Context-aware entity filtering
+
+- **Function Mapping**
+  - Automatic mapping of intents to agent functions
+  - Parameter extraction from entities
+  - Confidence-based function selection
 
 ## Project Structure
 
 ```
 .
-├── llm_providers/           # LLM provider implementations
-│   ├── base.py             # Base provider interface
-│   ├── openai_provider.py  # OpenAI implementation
-│   ├── anthropic_provider.py # Anthropic implementation
-│   └── __init__.py
-├── nlu/                    # Natural Language Understanding
-│   ├── pipeline.py        # Core NLU pipeline implementation
-│   └── __init__.py        # NLU module exports
-├── tests/                  # Test suite
-│   ├── nlu/               # NLU-specific tests
-│   │   ├── test_pipeline.py  # Pipeline unit tests
-│   │   └── test_cli.py       # Interactive test interface
-│   └── conftest.py        # Shared test configuration
-├── utils/                  # Utility modules
-│   └── logger.py          # Chat logging functionality
-├── cli_chat.py            # Main chat interface
-├── requirements.txt       # Project dependencies
-├── .env.example          # Environment variables template
-└── .gitignore           # Git ignore rules
+├── agents/                 # Specialized AI agents
+│   ├── calendar/          # Calendar management
+│   ├── email/            # Email handling
+│   ├── task/             # Task management
+│   └── note/             # Note-taking
+├── nlu/                   # Natural Language Understanding
+│   ├── pipeline.py       # Main NLU processing
+│   ├── entity_extractor.py # Entity extraction
+│   └── config/           # NLU configuration
+│       └── intents.yaml  # Intent definitions
+├── utils/                # Shared utilities
+├── config/               # System configuration
+└── tests/               # Test suite
 ```
 
 ## Setup
 
-1. Clone this repository
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/automating-my-life.git
+   cd automating-my-life
+   ```
 
-3. Configure environment variables:
-   - Copy `.env.example` to `.env`
-   - Add your API keys:
-```
-OPENAI_API_KEY=your-openai-api-key-here
-ANTHROPIC_API_KEY=your-anthropic-api-key-here
-```
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Set up environment variables:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your API keys and settings
+   ```
+
+4. Configure NLU patterns (optional):
+   ```bash
+   # Edit nlu/config/intents.yaml to customize intent patterns
+   ```
 
 ## Usage
 
-### Main Chat Interface
-Run the chat interface:
-```bash
-python cli_chat.py
+### Basic Usage
+```python
+from nlu.pipeline import NLUPipeline
+
+# Initialize the pipeline
+pipeline = NLUPipeline()
+
+# Process a user request
+result = pipeline.process("Schedule a meeting with John tomorrow at 2pm")
 ```
 
-### NLU Test Interface
-Run the interactive NLU test interface:
-```bash
-python -m tests.nlu.test_cli
-```
-
-The test interface provides detailed information about the NLU pipeline process:
-- Input text analysis
-- Intent recognition details
-- Entity extraction results
-- Function call mapping
-
-Example usage:
-```
-=== NLU Pipeline Test Interface ===
-Type 'exit' to quit
-Type 'help' to see available commands
-
-Enter text to process: schedule a meeting with John tomorrow at 2pm
-
-=== Input Text ===
-'schedule a meeting with John tomorrow at 2pm'
-
-=== Intent Information ===
-Type: schedule_meeting
-Confidence: 0.50
-Raw Text: schedule a meeting with john tomorrow at 2pm
-Number of Entities: 2
-
-=== Entity Information ===
-  Entity Type: datetime
-  Value: tomorrow
-  Confidence: 0.80
-  Position: 4 to 5
-
-  Entity Type: person
-  Value: john
-  Confidence: 0.80
-  Position: 3 to 4
-
-=== Function Call Information ===
-Function Name: schedule_meeting
-Confidence: 0.50
-
-Parameters:
-  datetime: tomorrow
-  person: john
-```
-
-### Commands
-- Type your message and press Enter to send
-- Type `exit` to quit the chat
-- Type `clear` to clear the chat history
-- Press Ctrl+C to exit at any time
+### Example Queries
+- "Schedule a meeting with John Smith tomorrow at 2:30 PM in the office for 1 hour"
+- "Send an email to Sarah about the project deadline"
+- "Create a high priority task to review the presentation"
+- "Take a note about the meeting discussion"
 
 ## Testing
 
 Run the test suite:
 ```bash
-pytest tests/
+pytest
 ```
 
-Run specific test files:
+Test the NLU pipeline:
 ```bash
-pytest tests/nlu/test_pipeline.py  # Run NLU pipeline tests
+python -m nlu.pipeline
 ```
 
-## Todo
+## Future Phases
 
-### Phase 1: Core Agent System
-- [x] Implement NLU pipeline for intent recognition
-- [x] Create interactive test interface
-- [ ] Finish entity extraction (might have to do with AI)
-- [ ] Implement main orchestrator agent
-- [ ] Create task parsing and delegation system
-- [ ] Develop agent communication protocol
-- [ ] Add basic task queue management
+### Phase 1: Enhanced NLU
+- [x] Implement weighted pattern matching
+- [x] Add context-aware entity extraction
+- [ ] Add support for compound intents
+- [ ] Implement entity disambiguation
+- [ ] Add timezone support
 
-### Phase 2: Specialized Agents
-- [ ] Email management agent
-- [ ] Calendar/scheduling agent
-- [ ] Task management agent
-- [ ] Note-taking agent
-- [ ] Obsidian agent 
-  - [ ] write new notes into obsidian
-  - [ ] Parse the knowledge on obsidian
-- [ ] Note taking agent
+### Phase 2: Agent Integration
+- [ ] Implement agent communication protocols
+- [ ] Add support for multi-agent tasks
+- [ ] Create agent state management
+- [ ] Implement task delegation
 
-### Phase 3: Integration & Enhancement
-- [ ] Add web interface
-- [ ] Implement agent memory system
-- [ ] Add task prioritization
-- [ ] Create agent performance monitoring
-- [ ] Add support for custom agent plugins
-
-### Phase 4: Security & Reliability
-- [ ] Implement robust error handling
-- [ ] Add rate limiting and API usage monitoring
-- [ ] Create backup and recovery systems
-- [ ] Add audit logging for sensitive operations
+### Phase 3: Advanced Features
+- [ ] Add machine learning for intent classification
+- [ ] Implement context memory
+- [ ] Add support for custom agents
+- [ ] Create a plugin system
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Submit a pull request
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details. 
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- OpenAI for GPT models
+- Anthropic for Claude models
+- Contributors and maintainers 

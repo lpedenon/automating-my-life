@@ -29,24 +29,30 @@ A sophisticated natural language understanding system that processes user input 
 - **Metadata Extraction**: Additional structured data for certain entities
 
 #### Supported Entity Types
-1. **Datetime**
+1. **Datetime** (Fully Implemented)
    - Specific times: "2:30 PM", "14:00"
    - Relative dates: "tomorrow", "next Friday"
    - Absolute dates: "March 15th"
    - Durations: "1 hour", "30 minutes"
+   - Combined datetime parsing: "tomorrow at 2:30 PM"
+   - Rich metadata including:
+     - Original text
+     - Parsed datetime object
+     - Type (absolute/relative)
+     - Human-readable format
 
-2. **Person**
-   - Full names: "John Smith"
-   - Pronouns: "he", "she", "they"
+2. **Person** (Needs Improvement)
+   - Basic name detection
+   - Pronouns support
 
-3. **Location**
-   - Prepositional phrases: "in the office", "at home"
+3. **Location** (Needs Improvement)
+   - Basic prepositional phrases
 
-4. **Duration**
-   - Time periods: "for 1 hour", "30 minutes"
+4. **Duration** (Needs Improvement)
+   - Basic time period detection
 
-5. **Priority**
-   - Priority levels: "high priority", "urgent"
+5. **Priority** (Needs Improvement)
+   - Basic priority level detection
 
 ### Context-Aware Processing
 - Entity extraction is filtered based on intent type
@@ -79,13 +85,36 @@ A sophisticated natural language understanding system that processes user input 
    - Position in text
    - Optional metadata
 
-### Datetime Processing
-- Relative dates are converted to absolute dates
-- Times are normalized to 24-hour format
-- Metadata includes:
+### Datetime Processing (Current Focus)
+- Sophisticated datetime parsing using dateparser library
+- Handles combined datetime expressions (e.g., "tomorrow at 3pm")
+- Normalizes times to consistent format
+- Rich metadata including:
   - Original text
-  - Parsed datetime
+  - Parsed datetime object
   - Type (absolute/relative)
+  - Human-readable format
+
+## Next Steps
+
+### Calendar Integration
+1. **Google Calendar API Integration**
+   - Implement OAuth2 authentication
+   - Create calendar event creation functionality
+   - Handle recurring events
+   - Support for different calendar types (primary, secondary)
+
+2. **Event Management**
+   - Meeting scheduling
+   - Deadline tracking
+   - Event reminders
+   - Conflict detection
+
+3. **Calendar Features**
+   - Event duration calculation
+   - Room/resource booking
+   - Attendee management
+   - Calendar availability checking
 
 ## Usage
 
@@ -113,27 +142,23 @@ python -m nlu.pipeline
 
 ## Current Limitations
 
-1. **Intent Detection**
-   - Currently uses simple pattern matching
-   - No support for compound intents
-   - Limited context awareness
-
-2. **Entity Extraction**
-   - Basic regex patterns may miss complex cases
+1. **Entity Extraction**
+   - Only datetime extraction is fully implemented
+   - Other entity types need significant improvement
    - Limited support for ambiguous entities
    - No machine learning-based extraction
 
-3. **Datetime Processing**
-   - Limited support for complex date expressions
-   - No timezone handling
-   - Basic duration parsing
+2. **Calendar Integration**
+   - Not yet implemented
+   - Need to add Google Calendar API support
+   - Need to handle calendar-specific features
 
 ## TODO
 
 ### Short-term Improvements
-- [ ] Implement compound intent detection
-- [ ] Add support for timezone handling
-- [ ] Improve datetime parsing with dateparser library
+- [ ] Implement Google Calendar API integration
+- [ ] Add support for calendar event creation
+- [ ] Improve other entity extractors
 - [ ] Add validation for configuration files
 - [ ] Implement entity disambiguation
 
@@ -155,6 +180,7 @@ python -m nlu.pipeline
 ## Dependencies
 - Python 3.8+
 - PyYAML
+- dateparser
 - datetime (standard library)
 - re (standard library)
 
